@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Diorite</title>
 
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="css/main.css" /> -->
 
     <script src="js/web3.min.js"></script>
   </head>
@@ -26,12 +26,19 @@
       <button id="checkBalance">Check Balance</button>
 
       <hr />
-      <label for="name" class="col-lg-2 control-label"><h3>Transfer</h3></label>
+      <label for="name" class="col-lg-2 control-label"><h3>Trading Diorite</h3></label>
       <p>From: &nbsp &nbsp &nbsp <input id="From" type="text" /></p>
       <p>To: &nbsp &nbsp &nbsp &nbsp &nbsp <input id="To" type="text" /></p>
       <p>Amount: &nbsp <input id="Amount" type="text" /></p>
       <button id="Transfer">Transfer</button>
       <p>Transaction Hash: &nbsp <span id="Tx"></span></p>
+	  
+	   <hr />
+      <label for="name" class="col-lg-2 control-label"><h3>Buy Diorite</h3></label>
+      <p>From: &nbsp &nbsp &nbsp <input id="FromBuyDiorite" type="text" /></p>
+      <p>Amount: &nbsp <input id="AmountBuyDiorite" type="text" /></p>
+      <button id="TransferBuyDiorite">Purchase Diorite</button>
+      <p>Transaction Hash: &nbsp <span id="TxBuyDiorite"></span></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -83,7 +90,8 @@
           });
         });
 
-        /* Transfer */
+        /* Send Diorite to other person */
+		// For giving away diorite to another person
         $("#Transfer").click(function () {
           $("#Tx").text("");
           var _from = $("#From").val();
@@ -107,7 +115,38 @@
               $("#Tx").text(txn_hash);
             }
           });
+		  
         });
+		
+		/* Send to Master account */
+		// To pay Master account for diorite
+        $("#TransferBuyDiorite").click(function () {
+          $("#TxBuyDiorite").text("");
+          var _from = $("#FromBuyDiorite").val();
+          const _to = "0xb0630dc4c80A85f0aDB0E8e9857Ac6E208589Ddb";
+          var _Amount = $("#AmountBuyDiorite").val();
+          var txnObject = {
+            from: _from,
+            to: _to,
+            value: web3.utils.toWei(_Amount, "ether"),
+            // "gas": 21000,         (optional)
+            // "gasPrice": 4500000,  (optional)
+            // "data": 'For testing' (optional)
+            // "nonce": 10           (optional)
+          };
+
+          web3.eth.sendTransaction(txnObject, function (error, result) {
+            if (error) {
+              console.log("Transaction error", error);
+            } else {
+              var txn_hash = result; //Get transaction hash
+              $("#TxBuyDiorite").text(txn_hash);
+            }
+          });
+		  
+        });
+		
+		
       });
     </script>
   </body>
