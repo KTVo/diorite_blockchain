@@ -5,29 +5,31 @@ body {
 }
 
 .container {
-    width: 50%;
+    width: 40%;
     margin: 0 auto;
 }
 
 label {
-    display:block;
-    margin-bottom:10px;
+    display: block;
+    margin-bottom: 10px;
 }
 
 input {
-    padding:10px;
-    width: 50%;
+    padding: 10px;
+    width: 85%;
     margin-bottom: 1em;
 }
 
 button {
     margin: 2em 0;
     padding: 1em 4em;
-    display:block;
+    width: 99%;
+    display: block;
+    font-size: 12px;
 }
 
 #instructor {
-    padding:1em;
+    padding: 1em;
     background-color:#fff;
     margin: 1em 0;
 }

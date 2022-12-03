@@ -37,6 +37,7 @@ contract Election {
 	// Contructor is called whenever our smart contract we deploy a 
 	// 	smart contract to the block chain
 	constructor() public {
+
 		addCandidate("Candidate 1");
 		addCandidate("Candidate 2");
 		
