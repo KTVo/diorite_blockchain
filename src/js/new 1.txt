@@ -1,0 +1,16 @@
+Don't put code on the slides
+
+25min-30min presentation time
+
+Room 848, 16th, 3:00 p.m.
+
+method to code and update the tree and update the tree by experimentation when to find out
+
+Must be done before the first week of the semester
+
+Have commitee member decided by then
+
+3pm at 
+
+
+Diorite.deployed().then(function(instance) {app = instance})

@@ -9,12 +9,15 @@ contract Diorite {
         bool isValue;
     }
 
+    uint userCount;
+
     // Hash map for user
     mapping(string => User) public users;
 
     constructor() public {
-        
+        userCount = 0;
     }
+
 
 
     function send (string memory _senderAddr, string memory _receiverAddr, uint _etherAmt)
@@ -53,8 +56,10 @@ contract Diorite {
         // Adds a new user if address does NOT exist
         // Check if address already exist
         if (!users[_accountAddr].isValue)
+        {
             users[_accountAddr] = User(_accountAddr, 0, true);  
-
+            userCount++;
+        }
         users[_accountAddr].dioriteBalance += _etherAmt;
     }
 
@@ -65,8 +70,10 @@ contract Diorite {
         // Adds a new user if address does NOT exist
         // Check if address already exist
         if (!users[_accountAddr].isValue)
+        {
             users[_accountAddr] = User(_accountAddr, 0, true);  
-
+            userCount++;
+        }
         return users[_accountAddr].dioriteBalance;
     }
 }

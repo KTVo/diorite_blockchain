@@ -8,7 +8,9 @@
 
     <link rel="stylesheet" type="text/css" href="css/main.css" />
 
-    <script src="js/require.js"></script>
+    <!-- <script src="js/require.js"></script> -->
+	
+	<script src="js/app.js"></script>
     <script src="js/web3.min.js"></script>
 
 	
@@ -18,19 +20,18 @@
     <div class="container">
       <h1>Diorite</h1>
 
-      <label for="name" class="col-lg-2 control-label"><h3>NodeInfo</h3></label>
-      <input id="NodeInfo" type="text" />
+      <label for="name" class="col-lg-2 control-label"><h3>Diorite Wallet</h3></label>
+	  <hr />
+      <input id="NodeInfo" type="text" STYLE="margin-top: 8px"/>
 
-      <hr />
-
-      <label for="name" class="col-lg-2 control-label"><h3>Balance</h3></label>
-      <p>Account: <input id="Account" type="text" /></p>
-      <p>Balance: <input id="Balance" type="text" /></p>
+      <label for="name" class="col-lg-2 control-label"><h3>Node Info</h3></label>
+      <p>Account: <input id="Account" type="text" STYLE="background-color: #CCCCCC;" readonly/></p>
+      <p>Balance: <input id="Balance" type="text" STYLE="background-color: #CCCCCC;" readonly/></p>
       <button id="checkBalance">Check Balance</button>
 
       <hr />
       <label for="name" class="col-lg-2 control-label"><h3>Trading Diorite</h3></label>
-      <p>From: &nbsp &nbsp &nbsp <input id="From" type="text" /></p>
+      <p>From: &nbsp &nbsp &nbsp <input id="From" type="text" STYLE="background-color: #CCCCCC;" readonly/></p>
       <p>To: &nbsp &nbsp &nbsp &nbsp &nbsp <input id="To" type="text" /></p>
       <p>Amount: &nbsp <input id="Amount" type="text" /></p>
       <button id="Transfer">Transfer</button>
@@ -38,7 +39,7 @@
 	  
 	   <hr />
       <label for="name" class="col-lg-2 control-label"><h3>Buy Diorite</h3></label>
-      <p>From: &nbsp &nbsp &nbsp <input id="FromBuyDiorite" type="text" /></p>
+      <p>From: &nbsp &nbsp &nbsp <input id="FromBuyDiorite" type="text" STYLE="background-color: #CCCCCC;" readonly/></p>
       <p>Amount: &nbsp <input id="AmountBuyDiorite" type="text" /></p>
       <button id="TransferBuyDiorite">Purchase Diorite</button>
       <p>Transaction Hash: &nbsp <span id="TxBuyDiorite"></span></p>
@@ -62,6 +63,120 @@
         web3 = new Web3(
           new Web3.providers.HttpProvider("http://127.0.0.1:7545")
         );
+		
+		var contract;
+		
+		var contractAddress = "0x5FA8D0a51acBE537784911947f8c7aC5D01a3288";
+		var contractABI = [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "name": "users",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "addr",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "dioriteBalance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isValue",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_senderAddr",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_receiverAddr",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_etherAmt",
+          "type": "uint256"
+        }
+      ],
+      "name": "send",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_accountAddr",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_etherAmt",
+          "type": "uint256"
+        }
+      ],
+      "name": "buy",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_accountAddr",
+          "type": "string"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ];
+			  
+		contract = new web3.eth.Contract(contractABI, contractAddress);
+		
+		
+		
 
         /* Get Node Info */
         web3.eth.getNodeInfo(function (error, result) {
@@ -75,14 +190,26 @@
 
         /* Get Balance */
         web3.eth.getAccounts(function (error, accounts) {
+		
+		  console.log("ACCOUNTSSSSS = " + accounts);
+		  
           if (error) {
             console.log(error);
           }
           $("#Account").val(accounts[0]);
           web3.eth.getBalance(accounts[0]).then(function (result) {
-            console.log("Balance : ", web3.utils.fromWei(result, "ether"));
-            $("#Balance").val(web3.utils.fromWei(result, "ether"));
+		  
+		  var rounded_balanaced = Math.round(web3.utils.fromWei(result, "ether"));
+            console.log("Balance : ", rounded_balanaced);
+            $("#Balance").val(rounded_balanaced);
           });
+		  
+		  // Populating "From:" from "Trading Diorite" section
+		  $("#From").val(accounts[0]);
+		  
+		  // Populating "From:" from "Buy Diorite" section
+		  $("#FromBuyDiorite").val(accounts[0]);
+
         });
 
         $("#checkBalance").click(function () {
@@ -91,6 +218,7 @@
             console.log("Balance: ", web3.utils.fromWei(result, "ether"));
             $("#Balance").val(web3.utils.fromWei(result, "ether"));
           });
+		  
         });
 
         /* Send Diorite to other person */
@@ -128,6 +256,7 @@
           var _from = $("#FromBuyDiorite").val();
           const _to = "0xb0630dc4c80A85f0aDB0E8e9857Ac6E208589Ddb";
           var _Amount = $("#AmountBuyDiorite").val();
+		  
           var txnObject = {
             from: _from,
             to: _to,
@@ -144,6 +273,15 @@
             } else {
               var txn_hash = result; //Get transaction hash
               $("#TxBuyDiorite").text(txn_hash);
+			  
+			    //Parameters:
+				// _from -> the recipient/buyer of Diorite
+				// _Amount -> how much Diorite is being purchased
+				contract.methods.buy("0x56c339DE2092b89D8bca6ce7B67928E511740821", _Amount).call().then().catch( function(err) { 
+						console.log(err); 
+					});
+				
+				
             }
           });
 		  
